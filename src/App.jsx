@@ -1,16 +1,23 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { isAuthenticatedAtom } from "./atoms/userAtom";
 
-import './App.css'
+import LoginPage from "./pages/Login";
+import Dashboard from "./pages/Dashboard"; // página protegida
 
-function App() {
+export default function App() {
+  const [isAuthenticated] = useAtom(isAuthenticatedAtom);
 
   return (
-    <>
-      <div>
-    <h1>Orus</h1>
-    </div>
-      
-    </>
-  )
+    <Routes>
+      <Route
+        path="/"
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />}
+      />
+      <Route
+        path="/dashboard"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+      />
+    </Routes>
+  );
 }
-
-export default App
