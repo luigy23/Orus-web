@@ -27,6 +27,7 @@ export const useLogin = () => {
       setUserToken(token);
       setUserData(usuario);
       setIsAuthenticated(true);
+      
 
       if (rememberMe) {
         localStorage.setItem("token", token);
@@ -34,7 +35,6 @@ export const useLogin = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      console.error("Error de login:", err);
       setError("Correo o contraseña inválidos");
     }
   };

@@ -111,7 +111,7 @@ export default function LoginPage() {
         <div className="text-center">
           <p className="text-white text-xl mb-4">¿No tienes cuenta?</p>
           <a
-            href="#"
+            href="/register"
             className="inline-block bg-white text-purple-700 font-medium py-3 px-12 rounded-full text-xl hover:bg-gray-100 transition duration-200">
             Regístrate
           </a>
