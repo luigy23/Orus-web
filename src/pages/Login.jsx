@@ -22,20 +22,22 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <main className="flex-1 flex flex-col p-6 max-w-md mx-auto w-full">
-        <div className="mt-8 mb-12 text-center">
-          <h1 className="text-4xl font-bold">
+        <div className="mt-8 mb-10 text-center">
+          <h1 className="text-3xl font-bold">
             Bienvenid<span className="text-black">@</span> a{" "}
-            <span className="text-purple-700">Orus</span>
+            <span className="text-orus-primary">Orus</span>
           </h1>
-          <p className="text-gray-500 text-xl mt-2">Inicia Sesión</p>
+          <p className="text-orus-gray-500 text-lg mt-1">Inicia Sesión</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           {/* Email */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-xl font-medium">
+          <div className="space-y-1">
+            <label
+              htmlFor="email"
+              className="text-lg font-medium text-orus-gray-900">
               Correo:
             </label>
             <div className="relative">
@@ -45,25 +47,27 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="hola@orus.com"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 text-lg"
+                className="w-full px-4 py-3 rounded-lg border border-orus-gray-100 focus:outline-none focus:ring-1 focus:ring-orus-primary text-orus-gray-500 text-lg"
                 required
               />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <Mail size={24} />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orus-gray-300">
+                <Mail size={22} />
               </div>
             </div>
           </div>
 
           {/* Forgot password */}
           <div className="flex justify-end">
-            <a href="#" className="text-purple-700 hover:underline">
+            <a href="#" className="text-orus-primary hover:underline text-sm">
               ¿olvidaste la contraseña?
             </a>
           </div>
 
           {/* Password */}
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-xl font-medium">
+          <div className="space-y-1">
+            <label
+              htmlFor="password"
+              className="text-lg font-medium text-orus-gray-900">
               Contraseña:
             </label>
             <div className="relative">
@@ -72,14 +76,14 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 text-lg"
+                className="w-full px-4 py-3 rounded-lg border border-orus-gray-100 focus:outline-none focus:ring-1 focus:ring-orus-primary text-lg"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orus-gray-300">
+                {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
               </button>
             </div>
           </div>
@@ -91,9 +95,11 @@ export default function LoginPage() {
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              className="h-4 w-4 text-orus-primary focus:ring-orus-primary border-orus-gray-100 rounded"
             />
-            <label htmlFor="remember-me" className="ml-2 block text-gray-600">
+            <label
+              htmlFor="remember-me"
+              className="ml-2 block text-orus-gray-500 text-sm">
               Recuérdame
             </label>
           </div>
@@ -101,18 +107,18 @@ export default function LoginPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-purple-700 hover:bg-purple-800 text-white font-medium py-3 px-4 rounded-full text-xl transition duration-200">
-            Iniciar sesión
+            className="w-full bg-orus-primary hover:bg-opacity-90 text-white font-medium py-3 px-4 rounded-full text-lg transition duration-200 mt-4">
+            iniciar sesión
           </button>
         </form>
       </main>
 
-      <footer className="bg-purple-700 p-6 mt-auto">
+      <footer className="bg-orus-primary p-6 mt-auto">
         <div className="text-center">
-          <p className="text-white text-xl mb-4">¿No tienes cuenta?</p>
+          <p className="text-white text-lg mb-3">¿No tienes cuenta?</p>
           <a
             href="/register"
-            className="inline-block bg-white text-purple-700 font-medium py-3 px-12 rounded-full text-xl hover:bg-gray-100 transition duration-200">
+            className="inline-block bg-white text-orus-primary font-medium py-2.5 px-12 rounded-full text-lg hover:bg-opacity-90 transition duration-200 w-full max-w-xs">
             Regístrate
           </a>
         </div>
