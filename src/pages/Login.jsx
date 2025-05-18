@@ -12,11 +12,11 @@ export default function LoginPage() {
   const [password, setPassword] = useAtom(passwordAtom);
   const [rememberMe, setRememberMe] = useAtom(rememberMeAtom);
   const [showPassword, setShowPassword] = useState(false);
-  const { login, error } = useLogin();
+  const { loginUser, error } = useLogin();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(email, password, rememberMe);
+    loginUser(email, password, rememberMe);
   };
 
   return (

@@ -1,43 +1,38 @@
-import { useAtom } from "jotai";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Axios from "../lib/Axios";
-import {
-  isAuthenticatedAtom,
-  userTokenAtom,
-  userDataAtom,
-} from "../atoms/userAtom";
+    import { useAtom } from "jotai";
+    import { useState } from "react";
+    import { useNavigate } from "react-router-dom";
+    import {
+      isAuthenticatedAtom,
+      userTokenAtom,
+      userDataAtom,
+    } from "../atoms/userAtom";
+    import AuthService from "../services/auth.service";
 
-export const useLogin = () => {
-  const [, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
-  const [, setUserToken] = useAtom(userTokenAtom);
-  const [, setUserData] = useAtom(userDataAtom);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+    export const useLogin = () => {
+      const [, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
+      const [, setUserToken] = useAtom(userTokenAtom);
+      const [, setUserData] = useAtom(userDataAtom);
+      const [error, setError] = useState("");
+      const navigate = useNavigate();
 
-  const login = async (email, password, rememberMe) => {
-    try {
-      const response = await Axios.post("/api/auth/login", {
-        Correo: email,
-        Contrasena: password,
-      });
+      const loginUser = async (email, password, rememberMe) => { // Cambiamos el nombre de la funcion a loginUser para evitar confucion con el nombre del servicio
+        try {
+          const data = await AuthService.login(email, password); // Llama a la función del servicio
 
-      const { token, usuario } = response.data;
+          setUserToken(data.token);
+          setUserData(data.usuario);
+          setIsAuthenticated(true);
 
-      setUserToken(token);
-      setUserData(usuario);
-      setIsAuthenticated(true);
-      
+          if (rememberMe) {
+            localStorage.setItem("token", data.token);
+          }
 
-      if (rememberMe) {
-        localStorage.setItem("token", token);
-      }
+          navigate("/dashboard");
+        } catch (err) {
+          setError(err.response?.data?.message || "Correo o contraseña inválidos"); //Manejamos el error.
+        }
+      };
 
-      navigate("/dashboard");
-    } catch (err) {
-      setError("Correo o contraseña inválidos");
-    }
-  };
-
-  return { login, error };
-};
+      return { loginUser, error }; // Exponemos la nueva funcion
+    };
+    

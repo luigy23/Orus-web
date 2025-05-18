@@ -7,7 +7,7 @@ export const useRegister = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [registerValue, setRegister] = useAtom(registerAtom);
+  const [, setRegister] = useAtom(registerAtom); // Obtenemos la función para actualizar el átomo
   const navigate = useNavigate();
 
   const handleRegistration = async (formData) => {
@@ -16,7 +16,7 @@ export const useRegister = () => {
     setSuccessMessage("");
 
     try {
-      const result = await setRegister(formData);
+      const result = await setRegister(formData); // Llamamos a setRegister con formData
       if (result?.mensaje !== "Usuario registrado con éxito") {
         setError(result?.error || "Error al registrar usuario");
       } else {
