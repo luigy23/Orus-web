@@ -1,28 +1,27 @@
-    import axiosClient from '../lib/Axios.js';
+import axiosClient from "../lib/Axios.js";
 
-    const AuthService = {
-      login: async (email, password) => {
-        try {
-          const response = await axiosClient.post('/api/auth/login', {
-            Correo: email,
-            Contrasena: password,
-          });
-          return response.data;
-        } catch (error) {
-          // Manejo de errores centralizado
-          throw error;
-        }
-      },
-      register: async (formData) => {
-        try {
-          const response = await axiosClient.post('/api/auth/register', formData);
-          return response.data;
-        } catch (error) {
-          throw error;
-        }
-      },
-      
-    };
+const AuthService = {
+  login: async (email, password) => {
+    const payload = { Correo: email, Contrasena: password };
 
-    export default AuthService;
-    
+    try {
+      const { data } = await axiosClient.post("/api/auth/login", payload);
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AuthService.login:", error);
+      throw error;
+    }
+  },
+
+  register: async (formData) => {
+    try {
+      const { data } = await axiosClient.post("/api/auth/register", formData);
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AuthService.register:", error);
+      throw error;
+    }
+  },
+};
+
+export default AuthService;
