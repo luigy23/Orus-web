@@ -2,43 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getEmpresaById } from '../services/empresas';
 import IconOrus from '../assets/Icons/IconOrus';
+import EmpresaSlider from '../components/empresas/EmpresaSlider';
+import IconWhatsapp from '../assets/Icons/IconWhatsapp';
 
 const EmpresaDetalle = () => {
   const { slugId } = useParams();
   // El id es lo último después del último guion
   const id = slugId.split('-').pop();
   const [empresa, setEmpresa] = useState(null);
+  const [imgIndex, setImgIndex] = useState(0);
+
   const traeEmpresa = async () => {
     const empresa = await getEmpresaById(id);
     setEmpresa(empresa);
+    setImgIndex(0); // Reiniciar al cambiar de empresa
   }
 
   useEffect(() => {
     traeEmpresa();
   }, [id]);
 
-
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center pb-10">
+    <div className="min-h-screen overflow-y-auto bg-gray-50 flex flex-col items-center pb-20">
       <IconOrus className='h-10 mt-6 mb-2' />
       {empresa && (
         <div className="w-full max-w-md flex flex-col items-center">
-          {/* Imagen principal */}
-          <div className="w-full rounded-[2.5rem] overflow-hidden mb-4 mt-2 aspect-[2.1/1] bg-gray-200">
-            <img
-              src={empresa.Imagenes?.[0]?.Url || 'https://placehold.co/600x400/EEE/31343C'}
-              alt={empresa.Nombre}
-              className="object-cover w-full h-full"
-            />
-          </div>
-          {/* Paginador fake */}
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <span className="w-8 h-2 rounded-full bg-purple-300" />
-            <span className="w-2 h-2 rounded-full bg-gray-300" />
-            <span className="w-2 h-2 rounded-full bg-gray-300" />
-            <span className="w-2 h-2 rounded-full bg-gray-300" />
-          </div>
+          {/* Slider extraído */}
+          <EmpresaSlider
+            imagenes={empresa.Imagenes}
+            nombre={empresa.Nombre}
+            imgIndex={imgIndex}
+            setImgIndex={setImgIndex}
+          />
           {/* Nombre */}
           <h2 className="text-3xl font-bold mb-2 text-center">{empresa.Nombre}</h2>
           {/* Categorías */}
@@ -83,22 +78,26 @@ const EmpresaDetalle = () => {
               </div>
             </div>
           </div>
+          
           {/* Botón WhatsApp */}
           <a
-            href={`https://wa.me/57${empresa.Telefono}`}
+            href={`https://wa.me/57${empresa.Telefono}?text=${encodeURIComponent(`Hola ${empresa.Nombre} vengo de Orus`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full max-w-xs bg-[#5B3DF6] hover:bg-[#4b2fd6] text-white text-lg font-semibold py-4 rounded-full flex items-center justify-center gap-3 shadow-lg transition-all duration-200"
+            className="w-72 fixed bottom-6 left-1/2 -translate-x-1/2 max-w-xs bg-orus-primary hover:bg-orus-primary/80 text-white text-lg font-semibold py-4 rounded-full flex items-center justify-center gap-3 shadow-lg transition-all duration-200 z-50"
           >
             Contactame Ahora
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 14.487l-.012-.012a8.25 8.25 0 01-3.37 1.13c-1.5.13-2.97-.23-4.19-1.13a8.25 8.25 0 01-2.7-2.7c-.9-1.22-1.26-2.69-1.13-4.19.1-1.13.47-2.22 1.13-3.37l.012-.012a8.25 8.25 0 011.13-3.37c1.22-.9 2.69-1.26 4.19-1.13 1.13.1 2.22.47 3.37 1.13l.012.012a8.25 8.25 0 013.37 1.13c.9 1.22 1.26 2.69 1.13 4.19-.1 1.13-.47 2.22-1.13 3.37z" />
-            </svg>
+            <IconWhatsapp />
           </a>
         </div>
       )}
     </div>
   );
 };
+
+// Animaciones CSS para slide
+// Agrega esto a tu archivo index.css o tailwind.css:
+// .animate-slide-left { transform: translateX(-100%); opacity: 0; }
+// .animate-slide-right { transform: translateX(100%); opacity: 0; }
 
 export default EmpresaDetalle; 
