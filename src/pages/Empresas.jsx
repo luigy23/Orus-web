@@ -15,10 +15,10 @@ const Empresas = () => {
   console.log(empresas)
 
   return (
-    <div className='min-h-screen mt-4 bg-gray-50 pb-24 px-4 flex flex-col items-center justify-center'>
+    <div className='min-h-screen mt-4 bg-gray-50 pb-24 px-4 flex flex-col items-center justify-start'>
       <IconOrus className='h-10' />
       <HomeSearchBar />
-      <div className='grid grid-cols-2 gap-4 w-full'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
         {empresas.map((empresa) => (
           <EmpresaItem key={empresa.id} empresa={empresa} />
         ))}

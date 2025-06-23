@@ -11,4 +11,14 @@ const getEmpresas = async () => {
     }
 }
 
-export { getEmpresas };
+const getEmpresaById = async (id) => {
+    try {
+        const response = await axiosClient.get(`/api/empresas/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener la empresa:', error);
+        throw error;
+    }
+}
+
+export { getEmpresas, getEmpresaById };

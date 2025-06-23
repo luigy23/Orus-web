@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
+import slugify from '../../utils/slugify';
 
 // "Categorias": [
 // //           {
@@ -24,7 +26,7 @@ const EmpresaItem = ({ empresa }) => {
   const ciudad = empresa.Ciudad || 'Sin ciudad';
 
   return (
-    <div className="bg-white rounded-3xl shadow-md  flex flex-col items-center w-full pb-4">
+    <Link to={`/empresas/${slugify(empresa.Nombre)}-${empresa.id}`} className="bg-white rounded-3xl shadow-md flex flex-col items-center w-full pb-4 transition-transform hover:scale-105 cursor-pointer text-inherit no-underline">
       <div className="w-full h-[97px] rounded-2xl overflow-hidden mb-4">
         <img
           src={imagenUrl}
@@ -41,7 +43,7 @@ const EmpresaItem = ({ empresa }) => {
         </svg>
         <span className='text-xs'>{ciudad}</span>
       </div>
-    </div>
+    </Link>
   )
 }
 
