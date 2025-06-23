@@ -7,6 +7,8 @@ import LoginPage from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/Register";
 import { useEffect } from "react";
+import Home from "./pages/Home";
+import Empresas from "./pages/Empresas";
 
 export default function App() {
   const [isAuthenticated] = useAtom(isAuthenticatedAtom);
@@ -24,6 +26,8 @@ export default function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/empresas" element={<Empresas />} />
       </Routes>
     </Provider>
   );

@@ -6,6 +6,7 @@ const AuthService = {
 
     try {
       const { data } = await axiosClient.post("/api/auth/login", payload);
+      localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       console.error("❌ Error en AuthService.login:", error);
