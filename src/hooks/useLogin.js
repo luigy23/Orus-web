@@ -19,7 +19,7 @@ export const useLogin = () => {
     setError(""); // limpia errores anteriores
 
     try {
-      const response = await AuthService.login(email, password);
+      const response = await AuthService.login(email, password, rememberMe);
       console.log("✅ Respuesta login:", response);
 
       if (!response?.token || !response?.usuario) {

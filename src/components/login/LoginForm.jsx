@@ -27,7 +27,7 @@ export default function LoginForm() {
         <h1 className="text-2xl sm:text-3xl font-bold">
           Bienvenid<span className="text-black">@</span> a{" "}
           <span className="text-orus-primary">Orus</span>
-          en Proceso
+     
         </h1>
         <p className="text-orus-gray-500 text-base sm:text-lg mt-1">
           Inicia Sesión
