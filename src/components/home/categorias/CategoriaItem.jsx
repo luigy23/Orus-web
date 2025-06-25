@@ -14,7 +14,7 @@ const CategoriaItem = ({categoria, color = "text-gray-700"}) => {
         ">
             {Icono}
         </div>
-        <span className={`${color} text-base group-hover:text-orus-primary transition-colors duration-300`}>{Nombre}</span>
+        <span className={`${color} text-sm group-hover:text-orus-primary transition-colors duration-300 block max-w-20 truncate text-center`}>{Nombre}</span>
     </div>
     </Link>
   )
