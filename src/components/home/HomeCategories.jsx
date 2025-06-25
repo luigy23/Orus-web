@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getCategorias } from '../../services/categorias';
 import CategoriaItem from './categorias/CategoriaItem';
+import { Link } from 'react-router-dom';
 
 const HomeCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -46,7 +47,7 @@ const HomeCategories = () => {
   return (<div className="mb-6">
     <div className="flex justify-between items-center mb-2">
       <h3 className="text-2xl font-semibold">Categorías:</h3>
-      <button className="text-orus-primary ">Ver todo</button>
+      <Link to="/buscar" className="text-orus-primary ">Ver todo</Link>
     </div>
     <div
       ref={scrollRef}

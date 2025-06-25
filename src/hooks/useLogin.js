@@ -35,7 +35,7 @@ export const useLogin = () => {
         localStorage.setItem("token", response.token);
       }
 
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
       console.error("❌ Error en loginUser:", err);
       const mensaje =
