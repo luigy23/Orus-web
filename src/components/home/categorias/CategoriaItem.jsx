@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const CategoriaItem = ({categoria}) => {
+const CategoriaItem = ({categoria, color = "text-gray-700"}) => {
 
     const {Nombre, Icono, id} = categoria;
+    
 
   return (
     <Link to={`/empresas/`}>
@@ -13,7 +14,7 @@ const CategoriaItem = ({categoria}) => {
         ">
             {Icono}
         </div>
-        <span className="text-gray-700 text-base group-hover:text-orus-primary transition-colors duration-300">{Nombre}</span>
+        <span className={`${color} text-base group-hover:text-orus-primary transition-colors duration-300`}>{Nombre}</span>
     </div>
     </Link>
   )
