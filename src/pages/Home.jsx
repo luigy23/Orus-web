@@ -6,7 +6,7 @@ import AsesoriasBanner from '../components/home/AsesoriasBanner';
 import Topbar from '../components/ui/navigation/Topbar';
 import IconOrus from '../assets/Icons/IconOrus';
 import { IconUser } from '../assets/Icons/IconUser'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 const Home = () => {
@@ -35,7 +35,9 @@ const Home = () => {
         <HomeBanner className='mt-4 mb-4' />
         <HomeCategories />
         <h3 className="text-2xl font-semibold mb-2">Asesorías:</h3>
-        <AsesoriasBanner />  
+        <Link to="/asesorias">  
+          <AsesoriasBanner />
+        </Link>
       </div>
 
     </div>
