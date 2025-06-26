@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const HomeSearchBar = () => (
   <Link to="/buscar" className='w-full'>
-  <div className="px-4 mb-4">
+  <div className=" ">
     <div className="flex items-center bg-white rounded-2xl shadow px-4 py-2">
       <input
         type="text"

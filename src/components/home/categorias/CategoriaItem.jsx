@@ -6,8 +6,8 @@ const CategoriaItem = ({categoria, color = "text-gray-700"}) => {
     const {Nombre, Icono, id} = categoria;
     
 
-  return (
-    <Link to={`/empresas/`}>
+  return (  
+    <Link to={`/empresas/categoria/${Nombre}-${id}`}>
     <div key={id} className="flex flex-col items-center cursor-pointer group">
         <div className="bg-white h-16 w-16 rounded-full shadow-md p-4 mb-1 flex items-center justify-center
         hover:scale-105 hover:text-white transition-all duration-300

@@ -12,6 +12,7 @@ const getEmpresas = async () => {
 }
 
 const getEmpresaById = async (id) => {
+    console.log("getEmpresaById", id)
     try {
         const response = await axiosClient.get(`/api/empresas/${id}`);
         return response.data;
@@ -21,4 +22,15 @@ const getEmpresaById = async (id) => {
     }
 }
 
-export { getEmpresas, getEmpresaById };
+const getEmpresasByCategoria = async (categoria) => {
+    console.log("getEmpresasByCategoria", categoria)
+    try {
+        const response = await axiosClient.get(`/api/empresas/categoria/${categoria}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener las empresas por categoría:', error);
+        throw error;
+    }
+}
+
+export { getEmpresas, getEmpresaById, getEmpresasByCategoria };

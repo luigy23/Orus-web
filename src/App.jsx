@@ -26,10 +26,16 @@ export default function App() {
   return (
     <Provider>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={
+          isAuthenticated ? <Home /> : <LoginPage />
+          
+          
+          
+          } />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/empresas/categoria/:categoria" element={<Empresas />} />
         <Route path="/empresas" element={<Empresas />} />
         <Route path="/empresas/:slugId" element={<EmpresaDetalle />} />
         <Route path="/buscar" element={<Buscador />} />

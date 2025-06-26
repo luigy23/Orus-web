@@ -20,7 +20,7 @@ const EmpresaDetalle = () => {
 
   useEffect(() => {
     traeEmpresa();
-  }, [id]);
+  }, [id]); 
 
   return (
     <div className="min-h-screen overflow-y-auto bg-gray-50 flex flex-col items-center pb-20">
