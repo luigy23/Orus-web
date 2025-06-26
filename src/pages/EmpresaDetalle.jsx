@@ -4,6 +4,8 @@ import { getEmpresaById } from '../services/empresas';
 import IconOrus from '../assets/Icons/IconOrus';
 import EmpresaSlider from '../components/empresas/EmpresaSlider';
 import IconWhatsapp from '../assets/Icons/IconWhatsapp';
+import Topbar from '../components/ui/navigation/Topbar';
+import BackButtom from '../components/ui/navigation/BackButtom';
 
 const EmpresaDetalle = () => {
   const { slugId } = useParams();
@@ -24,7 +26,10 @@ const EmpresaDetalle = () => {
 
   return (
     <div className="min-h-screen overflow-y-auto bg-gray-50 flex flex-col items-center pb-20">
-      <IconOrus className='h-10 mt-6 mb-2' />
+      <Topbar>
+        <BackButtom />
+        <IconOrus />
+      </Topbar>
       {empresa && (
         <div className="w-full max-w-md flex flex-col items-center">
           {/* Slider extraído */}

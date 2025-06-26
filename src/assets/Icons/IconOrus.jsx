@@ -1,5 +1,7 @@
 import * as React from "react"
+import { Link } from "react-router-dom"
 const IconOrus = (props) => (
+  <Link to="/home">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={81}
@@ -36,5 +38,6 @@ const IconOrus = (props) => (
       clipRule="evenodd"
     />
   </svg>
-)
+  </Link>
+  )
 export default IconOrus
