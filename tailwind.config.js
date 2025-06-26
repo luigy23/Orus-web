@@ -15,12 +15,13 @@ module.exports = {
           primary: "#4B427B", // Morado oscuro (botón y footer)
           secondary: "#A499DF", // Morado claro
           gray: {
-            100: "#D9D9D9", // Gris claro
+            100: "#D9D9D9", // Gris claro  
             300: "#858585", // Gris medio
             400: "#7E7676", // Gris
             500: "#656565", // Gris medio
             900: "#0D0D0D", // Casi negro
           },
+          background: "#F7F7F7",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

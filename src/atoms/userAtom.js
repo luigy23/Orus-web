@@ -1,5 +1,6 @@
 // src/atoms/userAtom.js
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 // Indica si el usuario ha iniciado sesión
 export const isAuthenticatedAtom = atom(false);
@@ -8,4 +9,4 @@ export const isAuthenticatedAtom = atom(false);
 export const userTokenAtom = atom("");
 
 // Almacena los datos del usuario autenticado
-export const userDataAtom = atom({});
+export const userDataAtom = atomWithStorage("userData", {}); 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const HomeSearchBar = () => (
   <Link to="/buscar" className='w-full'>
-  <div className=" ">
+
     <div className="flex items-center bg-white rounded-2xl shadow px-4 py-2">
       <input
         type="text"
@@ -14,7 +14,7 @@ const HomeSearchBar = () => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
       </svg>
     </div>
-  </div>
+
   </Link>
 );
 

@@ -44,5 +44,13 @@ export const useLogin = () => {
     }
   };
 
-  return { loginUser, error };
+  const logoutUser = () => {
+    setIsAuthenticated(false);
+    setUserToken("");
+    setUserData({});
+    localStorage.removeItem("token");
+    navigate("/login");
+  };  
+
+  return { loginUser, error, logoutUser };
 };

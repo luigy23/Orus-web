@@ -5,15 +5,22 @@ import { getEmpresas, getEmpresasByCategoria } from '../services/empresas'
 import EmpresaItem from '../components/empresas/EmpresaItem'
 import { useParams } from 'react-router-dom'
 import EtiquetaCategoria from '../components/home/categorias/EtiquetaCategoria'
+import { useNavigate } from 'react-router-dom'
+import { useAtom } from 'jotai'
+import { searchAtom } from '../atoms/searchAtom'
+import Topbar from '../components/ui/navigation/Topbar'
+import BackButtom from '../components/ui/navigation/BackButtom'
+import BottomBar from '../components/ui/navigation/BottomBar'
 
 const Empresas = () => {
+  const navigate = useNavigate()
   const { categoria } = useParams();
   const [empresas, setEmpresas] = useState([])
-  const [value, setValue] = useState("")
+  const [value, setValue] = useAtom(searchAtom)
   const [empresasFiltradas, setEmpresasFiltradas] = useState([])
 
   const id = categoria ? categoria.split('-').pop() : null
-  const nombre = categoria ? categoria.split('-').slice(0, -1).join(' ') : 'Todas las empresas'
+  const nombre = categoria ? categoria.split('-').slice(0, -1).join(' ') : ''
 
   const traeEmpresas = async () => {
     if (id) {
@@ -33,16 +40,22 @@ const Empresas = () => {
 
   useEffect(() => {
     if (value.trim() === "") {
-      setEmpresasFiltradas(empresas)
+      setEmpresasFiltradas(empresas);
     } else {
-      const filtro = value.toLowerCase()
+      const filtro = value.toLowerCase();
       setEmpresasFiltradas(
-        empresas.filter(
-          (empresa) =>
-            empresa.Nombre.toLowerCase().includes(filtro) ||
-            (empresa.Descripcion && empresa.Descripcion.toLowerCase().includes(filtro))
-        )
-      )
+        empresas.filter((empresa) => {
+          const nombreMatch = empresa.Nombre.toLowerCase().includes(filtro);
+          const descripcionMatch = empresa.Descripcion && empresa.Descripcion.toLowerCase().includes(filtro);
+          const categoriasMatch = Array.isArray(empresa.Categorias) && empresa.Categorias.some(
+            (cat) =>
+              cat.Categoria &&
+              cat.Categoria.Nombre &&
+              cat.Categoria.Nombre.toLowerCase().includes(filtro)
+          );
+          return nombreMatch || descripcionMatch || categoriasMatch;
+        })
+      );
     }
   }, [value, empresas])
 
@@ -51,10 +64,28 @@ const Empresas = () => {
   }
 
   return (
-    <div className='min-h-screen mt-4 bg-gray-50 pb-24 px-4 flex flex-col items-center justify-start'>
-      <IconOrus className='h-10' />
+    <div className='min-h-screen  bg-orus-background pb-24  flex flex-col items-center justify-start'>
+      <Topbar>
+        <div className='flex items-center justify-between gap-2 w-full'>
+          <BackButtom className='bg-white shadow-md' />
+          <IconOrus className='h-10' />
+          <div className='w-10'></div>
+        </div>
+      </Topbar>
+      <div className='w-full flex-col items-center justify-center px-4 mt-4 '>
       <Buscador value={value} onChange={onChange} />
-      <div className='w-full flex items-center justify-start mt-2'>
+      <div className='w-full flex items-center justify-start  gap-2 mt-3 mb-4'>
+        <button
+          onClick={() => navigate('/empresas')}
+
+          className={`px-3 py-1 rounded-full text-xs transition-colors ${
+            !categoria 
+              ? 'bg-blue-500 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Todas las categorías
+        </button>
         <EtiquetaCategoria categoria={nombre} />
       </div>
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
@@ -62,6 +93,8 @@ const Empresas = () => {
           <EmpresaItem key={empresa.id} empresa={empresa} />
         ))}
       </div>
+      </div>
+      <BottomBar />
     </div>
   )
 }

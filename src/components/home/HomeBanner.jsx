@@ -1,7 +1,7 @@
 import React from 'react';
 
-const HomeBanner = () => (
-  <div className="px-4 mb-6">
+const HomeBanner = ({className}) => (
+  <div className={` ${className}`}>
     <div className="rounded-3xl overflow-hidden relative h-40 flex items-center justify-center bg-gray-200">
       <img
         src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&q=80"

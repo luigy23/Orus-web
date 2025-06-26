@@ -12,7 +12,10 @@ import Home from "./pages/Home";
 import Empresas from "./pages/Empresas";
 import EmpresaDetalle from "./pages/EmpresaDetalle";
 import Buscador from "./pages/Buscador";
-
+import Perfil from './pages/User/Perfil';
+import Asesorias from './pages/Asesorias/Asesorias';
+import PerfilAsesor from './pages/Asesorias/PerfilAsesor';
+  
 export default function App() {
   const [isAuthenticated] = useAtom(isAuthenticatedAtom);
   const navigate = useNavigate(); // Obtén la función navigate
@@ -39,6 +42,9 @@ export default function App() {
         <Route path="/empresas" element={<Empresas />} />
         <Route path="/empresas/:slugId" element={<EmpresaDetalle />} />
         <Route path="/buscar" element={<Buscador />} />
+        <Route path="/perfil" element={<Perfil/>} />
+        <Route path="/asesorias" element={<Asesorias/>} />
+        <Route path="/asesorias/:id" element={<PerfilAsesor/>} />
       </Routes>
     </Provider>
   );

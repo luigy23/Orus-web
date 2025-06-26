@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import slugify from '../../utils/slugify';
+import EtiquetaCategoria from '../home/categorias/EtiquetaCategoria';
 
 // "Categorias": [
 // //           {
@@ -35,7 +36,7 @@ const EmpresaItem = ({ empresa }) => {
         />
       </div>
       <h2 className="text-base font-semibold mb-2 text-center">{empresa.Nombre}</h2>
-      <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs mb-2">• {PrimeraCategoria}</span>
+      <EtiquetaCategoria categoria={PrimeraCategoria} />
       <div className="flex items-center text-gray-500 text-base mt-1">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
