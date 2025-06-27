@@ -7,13 +7,14 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 5000,
-  withCredentials: true
+  //withCredentials: true
 })
 
 // Interceptor para añadir el token
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
     if (token) {
       const cleanToken = token.replace(/^"|"$/g, '')
       config.headers.Authorization = `Bearer ${cleanToken}`
