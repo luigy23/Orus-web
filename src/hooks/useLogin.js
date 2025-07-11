@@ -16,7 +16,7 @@ export const useLogin = () => {
   const navigate = useNavigate();
 
   const loginUser = async (email, password, rememberMe) => {
-    setError(""); // limpia errores anteriores
+    setError("");
 
     try {
       const response = await AuthService.login(email, password, rememberMe);
@@ -31,9 +31,10 @@ export const useLogin = () => {
       setUserData(response.usuario);
       setIsAuthenticated(true);
 
-      if (rememberMe) {
-        localStorage.setItem("token", response.token);
-      }
+      // Guardar token y usuario según la opción de rememberMe
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem("token", response.token);
+      storage.setItem("user", JSON.stringify(response.usuario));
 
       navigate("/home");
     } catch (err) {
