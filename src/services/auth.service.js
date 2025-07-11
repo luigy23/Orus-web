@@ -1,11 +1,12 @@
 import axiosClient from "../lib/Axios.js";
 
 const AuthService = {
-  login: async (email, password) => {
-    const payload = { Correo: email, Contrasena: password };
+  login: async (email, password, rememberMe = false) => {
+    const payload = { Correo: email, Contrasena: password, Recordar: rememberMe };
 
     try {
       const { data } = await axiosClient.post("/api/auth/login", payload);
+      localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       console.error("❌ Error en AuthService.login:", error);

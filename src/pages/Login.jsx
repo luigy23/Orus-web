@@ -3,7 +3,7 @@ import LoginForm from "../components/login/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col h-screen bg-white">
       <LoginForm />
       <footer className="bg-orus-primary p-4 sm:p-6 mt-auto">
         <div className="text-center">

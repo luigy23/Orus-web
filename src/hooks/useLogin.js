@@ -19,7 +19,8 @@ export const useLogin = () => {
     setError("");
 
     try {
-      const response = await AuthService.login(email, password);
+      const response = await AuthService.login(email, password, rememberMe);
+      console.log("✅ Respuesta login:", response);
 
       if (!response?.token || !response?.usuario) {
         setError("Respuesta inválida del servidor");
@@ -35,7 +36,7 @@ export const useLogin = () => {
       storage.setItem("token", response.token);
       storage.setItem("user", JSON.stringify(response.usuario));
 
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
       console.error("❌ Error en loginUser:", err);
       const mensaje =
@@ -44,5 +45,13 @@ export const useLogin = () => {
     }
   };
 
-  return { loginUser, error };
+  const logoutUser = () => {
+    setIsAuthenticated(false);
+    setUserToken("");
+    setUserData({});
+    localStorage.removeItem("token");
+    navigate("/login");
+  };  
+
+  return { loginUser, error, logoutUser };
 };
