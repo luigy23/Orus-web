@@ -29,48 +29,48 @@ export const asesores = [
   },
   {
     id: "emprender",
-    nombre: "Esteban",
-    titulo: "Asesoria Emprender",
-    descripcion: "¡Hola! Soy Esteban, estudiante de analista con experiencia en emprendimiento. Te ayudo a potenciar y adaptar tus ideas al mercado.",
-    descripcionLarga: "Si necesitas ayuda para emprender o potenciar tu negocio, puedo guiarte en el proceso.",
-    experiencia: "+1 año",
+    nombre: "Esteban Escobar",
+    titulo: "Asesoría Negocios",
+    descripcion: "Si necesitas ayuda o una guía para emprender, puedo ser tu mejor aliado.",
+    descripcionLarga: "Si necesitas ayuda o una guía para emprender, puedo ser tu mejor aliado.",
+    experiencia: "+3 años",
     telefono: "+573193896000",
     detalles: [
       {
         tipo: "destacado",
-        texto: "Experiencia en emprendimiento y análisis de negocios."
+        texto: "De experiencia en emprendimiento."
       },
       {
         tipo: "color",
-        texto: "Te ayudo a validar y adaptar tus ideas al mercado."
+        texto: "Puedo potenciar tus ideas y adaptarlas a la actualidad y a las necesidades del mercado."
       },
       {
         tipo: "borde",
-        texto: "Estudiante de Análisis de Negocios en la Universidad X."
+        texto: "Soy estudiante de Análisis en Costos y Presupuesto en el ITM de Medellín."
       }
     ],
     imagen: imgEsteban
   },
   {
     id: "marketing",
-    nombre: "Tulas",
-    titulo: "Asesoria Marketing",
-    descripcion: "¡Hola! Soy Tulas, estudiante de analista con experiencia en emprendimiento. Te ayudo a potenciar y adaptar tus ideas al mercado.",
-    descripcionLarga: "Si necesitas ayuda para mejorar tu marketing y llegar a más clientes, puedo apoyarte.",
-    experiencia: "+1 año",
+    nombre: "Alejandro Tula",
+    titulo: "Asesoría Marketing",
+    descripcion: "Si necesitas ayuda o una guía para mejorar la estrategia comercial de tu negocio, puedo ser tu mejor aliado.",
+    descripcionLarga: "Si necesitas ayuda o una guía para mejorar la estrategia comercial de tu negocio, puedo ser tu mejor aliado.",
+    experiencia: "+4 años",
     telefono: "+573193896000",
     detalles: [
       {
         tipo: "destacado",
-        texto: "Experiencia en marketing digital y estrategias de crecimiento."
+        texto: "De experiencia como fotógrafo, director de cortometrajes y creador de contenido para redes sociales."
       },
       {
         tipo: "color",
-        texto: "Te ayudo a crear campañas efectivas y aumentar tu alcance."
+        texto: "Puedo impulsar tu producto o emprendimiento con campañas publicitarias efectivas y creativas."
       },
       {
         tipo: "borde",
-        texto: "Estudiante de Marketing en la Universidad Y."
+        texto: "Soy director de cine, graduado del ITM de Medellín."
       }
     ],
     imagen: imgTulas
