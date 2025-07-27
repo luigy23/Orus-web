@@ -7,6 +7,7 @@ import {
   userDataAtom,
 } from "../atoms/userAtom";
 import AuthService from "../services/auth.service";
+import { useLogout } from "./useLogout";
 
 export const useLogin = () => {
   const [, setIsAuthenticated] = useAtom(isAuthenticatedAtom);
@@ -14,6 +15,7 @@ export const useLogin = () => {
   const [, setUserData] = useAtom(userDataAtom);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { logout } = useLogout();
 
   const loginUser = async (email, password, rememberMe) => {
     setError("");
@@ -27,15 +29,22 @@ export const useLogin = () => {
         return;
       }
 
+      // Actualizar atoms (que automáticamente persisten en localStorage)
       setUserToken(response.token);
       setUserData(response.usuario);
       setIsAuthenticated(true);
 
-      // Guardar token y usuario según la opción de rememberMe
+      // Guardar token en el storage apropiado para AuthService y Axios
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem("token", response.token);
-      storage.setItem("user", JSON.stringify(response.usuario));
+      
+      // Limpiar el storage contrario
+      const otherStorage = rememberMe ? sessionStorage : localStorage;
+      otherStorage.removeItem("token");
 
+      console.log("✅ Usuario logueado exitosamente - Redirigiendo a /home");
+      console.log("👤 Usuario:", response.usuario.nombre, "| Rol:", response.usuario.rol);
+      
       navigate("/home");
     } catch (err) {
       console.error("❌ Error en loginUser:", err);
@@ -45,13 +54,8 @@ export const useLogin = () => {
     }
   };
 
-  const logoutUser = () => {
-    setIsAuthenticated(false);
-    setUserToken("");
-    setUserData({});
-    localStorage.removeItem("token");
-    navigate("/login");
-  };  
+  // Usar el hook de logout centralizado
+  const logoutUser = logout;
 
   return { loginUser, error, logoutUser };
 };

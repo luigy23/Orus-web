@@ -1,12 +1,21 @@
 // src/atoms/userAtom.js
-import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-// Indica si el usuario ha iniciado sesión
-export const isAuthenticatedAtom = atom(false);
+// Función para inicializar el estado de autenticación basado en localStorage/sessionStorage
+const getInitialAuthState = () => {
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  return !!token; // Convierte a boolean
+};
 
-// Almacena el token JWT recibido del backend
-export const userTokenAtom = atom("");
+const getInitialToken = () => {
+  return localStorage.getItem("token") || sessionStorage.getItem("token") || "";
+};
+
+// Indica si el usuario ha iniciado sesión - ahora con persistencia
+export const isAuthenticatedAtom = atomWithStorage("isAuthenticated", getInitialAuthState());
+
+// Almacena el token JWT recibido del backend - ahora con persistencia
+export const userTokenAtom = atomWithStorage("userToken", getInitialToken());
 
 // Almacena los datos del usuario autenticado
 export const userDataAtom = atomWithStorage("userData", {}); 

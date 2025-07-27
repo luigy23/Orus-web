@@ -1,14 +1,13 @@
 import './App.css'
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom"; // Importa useNavigate
-import { useAtom, Provider } from "jotai";
-import { isAuthenticatedAtom, userDataAtom } from "./atoms/userAtom";
+import { Routes, Route } from "react-router-dom";
+import { Provider } from "jotai";
+import { useAuthInitialization } from "./hooks/useAuthInitialization";
 
 import LoginPage from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/Register";
 import PanelAdmin from "./pages/PanelAdmin";
 import RutaProtegida from "./components/common/RutaProtegida";
-import { useEffect } from "react";
 import Home from "./pages/Home";
 import Empresas from "./pages/Empresas";
 import EmpresaDetalle from "./pages/EmpresaDetalle";
@@ -18,20 +17,10 @@ import Asesorias from './pages/Asesorias/Asesorias';
 import PerfilAsesor from './pages/Asesorias/PerfilAsesor';
   
 export default function App() {
-  const [isAuthenticated] = useAtom(isAuthenticatedAtom);
-  const [userData] = useAtom(userDataAtom);
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthInitialization();
 
-  useEffect(() => {
-    if (isAuthenticated && userData) {
-      if (userData.rol === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/home");
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-
+  // Ya no necesitamos navegación automática - el usuario decide desde Home
+  
   return (
     <Provider>
       <Routes>
