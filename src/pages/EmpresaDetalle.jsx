@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { getEmpresaById } from '../services/empresas';
 import IconOrus from '../assets/Icons/IconOrus';
@@ -14,15 +14,46 @@ const EmpresaDetalle = () => {
   const [empresa, setEmpresa] = useState(null);
   const [imgIndex, setImgIndex] = useState(0);
 
-  const traeEmpresa = async () => {
+  const traeEmpresa = useCallback(async () => {
     const empresa = await getEmpresaById(id);
     setEmpresa(empresa);
     setImgIndex(0); // Reiniciar al cambiar de empresa
-  }
+  }, [id]);
+
+  // Función para determinar si está abierto ahora
+  const estaAbierto = (empresa) => {
+    const ahora = new Date();
+    const diaActual = ahora.getDay(); // 0 = Domingo, 1 = Lunes, etc.
+    const horaActual = ahora.getHours() * 60 + ahora.getMinutes(); // En minutos desde medianoche
+    
+    const diasSemana = [
+      'HorarioDomingo', 'HorarioLunes', 'HorarioMartes', 
+      'HorarioMiercoles', 'HorarioJueves', 'HorarioViernes', 'HorarioSabado'
+    ];
+    
+    const horarioHoy = empresa[diasSemana[diaActual]];
+    
+    if (!horarioHoy || horarioHoy === 'Cerrado' || horarioHoy.toLowerCase() === 'cerrado') {
+      return false;
+    }
+    
+    if (horarioHoy.includes('-')) {
+      const [inicio, fin] = horarioHoy.split('-');
+      const [horaInicio, minutoInicio] = inicio.trim().split(':').map(Number);
+      const [horaFin, minutoFin] = fin.trim().split(':').map(Number);
+      
+      const tiempoInicio = horaInicio * 60 + minutoInicio;
+      const tiempoFin = horaFin * 60 + minutoFin;
+      
+      return horaActual >= tiempoInicio && horaActual <= tiempoFin;
+    }
+    
+    return false;
+  };
 
   useEffect(() => {
     traeEmpresa();
-  }, [id]); 
+  }, [traeEmpresa]); 
 
   return (
     <div className="min-h-screen overflow-y-auto bg-gray-50 flex flex-col items-center pb-20">
@@ -61,26 +92,75 @@ const EmpresaDetalle = () => {
           </div>
           {/* Horario */}
           <div className="w-full flex flex-col items-center mb-8">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-500">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z" />
               </svg>
               <span className="text-xl font-semibold text-gray-700">Horario de atención</span>
+              {/* Indicador de estado actual */}
+              <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                estaAbierto(empresa) 
+                  ? 'bg-green-100 text-green-700' 
+                  : 'bg-red-100 text-red-700'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                  estaAbierto(empresa) ? 'bg-green-500' : 'bg-red-500'
+                }`}></div>
+                {estaAbierto(empresa) ? 'Abierto ahora' : 'Cerrado ahora'}
+              </div>
             </div>
-            <div className="flex flex-col gap-2 w-full max-w-xs">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Lunes a Viernes:</span>
-                <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">8:00am</span>
-                <span className="text-gray-400">—</span>
-                <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">5:30 pm</span>
+            
+            <div className="bg-white rounded-2xl p-4 w-full shadow-sm">
+              <div className="space-y-3">
+                {[
+                  { nombre: 'Lunes', campo: 'HorarioLunes' },
+                  { nombre: 'Martes', campo: 'HorarioMartes' },
+                  { nombre: 'Miércoles', campo: 'HorarioMiercoles' },
+                  { nombre: 'Jueves', campo: 'HorarioJueves' },
+                  { nombre: 'Viernes', campo: 'HorarioViernes' },
+                  { nombre: 'Sábado', campo: 'HorarioSabado' },
+                  { nombre: 'Domingo', campo: 'HorarioDomingo' }
+                ].map((dia) => {
+                  const horario = empresa[dia.campo];
+                  const esCerrado = !horario || horario === 'Cerrado' || horario.toLowerCase() === 'cerrado';
+                  
+                  return (
+                    <div key={dia.nombre} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                      <span className="text-gray-600 font-medium min-w-[80px]">{dia.nombre}:</span>
+                      {esCerrado ? (
+                        <span className="bg-red-100 text-red-700 rounded-full px-3 py-1 text-sm font-medium">
+                          Cerrado
+                        </span>
+                      ) : horario.includes('-') ? (
+                        <div className="flex items-center gap-2">
+                          <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">
+                            {horario.split('-')[0].trim()}
+                          </span>
+                          <span className="text-gray-400">—</span>
+                          <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">
+                            {horario.split('-')[1].trim()}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm font-medium">
+                          {horario}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Sabado:</span>
-                <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">8:00am</span>
-                <span className="text-gray-400">—</span>
-                <span className="bg-green-100 text-green-700 rounded-full px-3 py-1 text-sm font-mono">12:00 pm</span>
-              </div>
+              
+              {/* Mensaje si no hay horarios configurados */}
+              {!empresa.HorarioLunes && !empresa.HorarioMartes && !empresa.HorarioMiercoles && 
+               !empresa.HorarioJueves && !empresa.HorarioViernes && !empresa.HorarioSabado && 
+               !empresa.HorarioDomingo && (
+                <div className="text-center text-gray-500 py-4">
+                  <p>Horarios no configurados</p>
+                  <p className="text-sm">Contacta directamente para conocer los horarios</p>
+                </div>
+              )}
             </div>
           </div>
           

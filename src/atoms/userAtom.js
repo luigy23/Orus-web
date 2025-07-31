@@ -10,3 +10,6 @@ export const userTokenAtom = atom("");
 
 // Almacena los datos del usuario autenticado
 export const userDataAtom = atomWithStorage("userData", {}); 
+
+// Indica si se está verificando la autenticación inicial
+export const authLoadingAtom = atom(true);

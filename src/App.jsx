@@ -1,8 +1,7 @@
 import './App.css'
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"; // Importa useNavigate
 import { useAtom } from "jotai";
-import { isAuthenticatedAtom } from "./atoms/userAtom";
-import { Provider } from "jotai";
+import { isAuthenticatedAtom, authLoadingAtom } from "./atoms/userAtom";
 
 import LoginPage from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -17,14 +16,28 @@ import Asesorias from './pages/Asesorias/Asesorias';
 import PerfilAsesor from './pages/Asesorias/PerfilAsesor';
 import AdminRoute from './components/auth/AdminRoute';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import EmpresasAdmin from './pages/Admin/EmpresasAdmin';
+import EmpresaForm from './pages/Admin/EmpresaForm';
+import EmpresaDetalleAdmin from './pages/Admin/EmpresaDetalleAdmin';
 import useAuthPersistence from './hooks/useAuthPersistence';
   
 export default function App() {
   const [isAuthenticated] = useAtom(isAuthenticatedAtom);
+  const [authLoading, setAuthLoading] = useAtom(authLoadingAtom);
   const navigate = useNavigate(); // Obtén la función navigate
   
   // Restaurar sesión al cargar la aplicación
   useAuthPersistence();
+
+  // Efecto para asegurar que el estado de carga se reinicie correctamente
+  useEffect(() => {
+    console.log('🔍 Estado actual - isAuthenticated:', isAuthenticated, 'authLoading:', authLoading);
+    // Si estamos autenticados, asegurar que no esté en loading
+    if (isAuthenticated && authLoading) {
+      console.log('🔧 Corrigiendo estado de carga...');
+      setAuthLoading(false);
+    }
+  }, [isAuthenticated, authLoading, setAuthLoading]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -33,15 +46,23 @@ export default function App() {
     }
   }, [isAuthenticated, navigate]);
 
+  // Mostrar spinner de carga mientras se verifica la autenticación
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="ml-4 text-gray-600">Verificando sesión...</div>
+      </div>
+    );
+  }
+
   return (
-    <Provider>
+    <>
       <Routes>
         <Route path="/" element={
           isAuthenticated ? <Home /> : <LoginPage />
-          
-          
-          
-          } />
+        } />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/home" element={<Home />} />
@@ -61,20 +82,25 @@ export default function App() {
         } />
         <Route path="/admin/empresas" element={
           <AdminRoute>
-            <div>Lista de Empresas Admin (Por implementar)</div>
+            <EmpresasAdmin />
           </AdminRoute>
         } />
         <Route path="/admin/empresas/nueva" element={
           <AdminRoute>
-            <div>Nueva Empresa (Por implementar)</div>
+            <EmpresaForm />
           </AdminRoute>
         } />
         <Route path="/admin/empresas/:id/editar" element={
           <AdminRoute>
-            <div>Editar Empresa (Por implementar)</div>
+            <EmpresaForm />
+          </AdminRoute>
+        } />
+        <Route path="/admin/empresas/:id" element={
+          <AdminRoute>
+            <EmpresaDetalleAdmin />
           </AdminRoute>
         } />
       </Routes>
-    </Provider>
+    </>
   );
 }

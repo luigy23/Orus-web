@@ -10,12 +10,25 @@ const AdminService = {
   /**
    * Obtener todas las empresas (vista admin)
    */
-  getEmpresas: async () => {
+  getEmpresas: async (params = {}) => {
     try {
-      const { data } = await axiosClient.get("/api/admin/empresas");
+      const { data } = await axiosClient.get("/api/admin/empresas", { params });
       return data;
     } catch (error) {
       console.error("❌ Error en AdminService.getEmpresas:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Obtener una empresa específica por ID
+   */
+  getEmpresaPorId: async (id) => {
+    try {
+      const { data } = await axiosClient.get(`/api/admin/empresas/${id}`);
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AdminService.getEmpresaPorId:", error);
       throw error;
     }
   },
@@ -59,6 +72,19 @@ const AdminService = {
     }
   },
 
+  /**
+   * Cambiar estado de una empresa
+   */
+  cambiarEstadoEmpresa: async (id, estado) => {
+    try {
+      const { data } = await axiosClient.patch(`/api/admin/empresas/${id}/estado`, { estado });
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AdminService.cambiarEstadoEmpresa:", error);
+      throw error;
+    }
+  },
+
   // ===== IMÁGENES =====
 
   /**
@@ -69,7 +95,7 @@ const AdminService = {
       const formData = new FormData();
       
       // Agregar cada imagen al FormData
-      imagenes.forEach((imagen, index) => {
+      imagenes.forEach((imagen) => {
         formData.append('imagenes', imagen);
       });
 
@@ -130,6 +156,21 @@ const AdminService = {
       return data;
     } catch (error) {
       console.error("❌ Error en AdminService.getCategorias:", error);
+      throw error;
+    }
+  },
+
+  // ===== USUARIOS =====
+
+  /**
+   * Obtener todos los usuarios disponibles
+   */
+  getUsuarios: async () => {
+    try {
+      const { data } = await axiosClient.get("/api/usuarios");
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AdminService.getUsuarios:", error);
       throw error;
     }
   },
