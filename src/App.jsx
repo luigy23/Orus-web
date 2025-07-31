@@ -15,14 +15,21 @@ import Buscador from "./pages/Buscador";
 import Perfil from './pages/User/Perfil';
 import Asesorias from './pages/Asesorias/Asesorias';
 import PerfilAsesor from './pages/Asesorias/PerfilAsesor';
+import AdminRoute from './components/auth/AdminRoute';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import useAuthPersistence from './hooks/useAuthPersistence';
   
 export default function App() {
   const [isAuthenticated] = useAtom(isAuthenticatedAtom);
   const navigate = useNavigate(); // Obtén la función navigate
+  
+  // Restaurar sesión al cargar la aplicación
+  useAuthPersistence();
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/home");
+      // No redirigir automáticamente, dejar que el usuario esté donde está
+      // navigate("/home");
     }
   }, [isAuthenticated, navigate]);
 
@@ -45,6 +52,28 @@ export default function App() {
         <Route path="/perfil" element={<Perfil/>} />
         <Route path="/asesorias" element={<Asesorias/>} />
         <Route path="/asesorias/:id" element={<PerfilAsesor/>} />
+        
+        {/* Rutas de Administración */}
+        <Route path="/admin" element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        } />
+        <Route path="/admin/empresas" element={
+          <AdminRoute>
+            <div>Lista de Empresas Admin (Por implementar)</div>
+          </AdminRoute>
+        } />
+        <Route path="/admin/empresas/nueva" element={
+          <AdminRoute>
+            <div>Nueva Empresa (Por implementar)</div>
+          </AdminRoute>
+        } />
+        <Route path="/admin/empresas/:id/editar" element={
+          <AdminRoute>
+            <div>Editar Empresa (Por implementar)</div>
+          </AdminRoute>
+        } />
       </Routes>
     </Provider>
   );

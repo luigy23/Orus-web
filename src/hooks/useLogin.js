@@ -35,7 +35,12 @@ export const useLogin = () => {
         localStorage.setItem("token", response.token);
       }
 
-      navigate("/home");
+      // Redirigir según el rol del usuario
+      if (response.usuario.rol === 'ADMINISTRADOR') {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
     } catch (err) {
       console.error("❌ Error en loginUser:", err);
       const mensaje =
