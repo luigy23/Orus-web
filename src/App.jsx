@@ -19,6 +19,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import EmpresasAdmin from './pages/Admin/EmpresasAdmin';
 import EmpresaForm from './pages/Admin/EmpresaForm';
 import EmpresaDetalleAdmin from './pages/Admin/EmpresaDetalleAdmin';
+import CategoriasAdmin from './pages/Admin/CategoriasAdmin';
 import useAuthPersistence from './hooks/useAuthPersistence';
   
 export default function App() {
@@ -98,6 +99,11 @@ export default function App() {
         <Route path="/admin/empresas/:id" element={
           <AdminRoute>
             <EmpresaDetalleAdmin />
+          </AdminRoute>
+        } />
+        <Route path="/admin/categorias" element={
+          <AdminRoute>
+            <CategoriasAdmin />
           </AdminRoute>
         } />
       </Routes>

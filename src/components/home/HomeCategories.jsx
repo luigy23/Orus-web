@@ -12,8 +12,21 @@ const HomeCategories = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const categories = await getCategorias();
-      setCategories(categories);
+      try {
+        const categories = await getCategorias();
+        console.log('🏠 HomeCategories - Categorías recibidas:', categories);
+        
+        // Asegurar que siempre tenemos un array
+        if (Array.isArray(categories)) {
+          setCategories(categories);
+        } else {
+          console.warn('⚠️ HomeCategories - Las categorías no son un array:', categories);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error('❌ HomeCategories - Error al cargar categorías:', error);
+        setCategories([]);
+      }
     }
     fetchCategories();
   }, []);
@@ -58,7 +71,7 @@ const HomeCategories = () => {
       onMouseMove={handleMouseMove}
       style={{ userSelect: isDragging.current ? 'none' : 'auto' }}
     >
-      {categories.map((cat) => (
+      {Array.isArray(categories) && categories.map((cat) => (
         <CategoriaItem key={cat.id} categoria={cat} />
       ))}
     </div>
