@@ -4,7 +4,7 @@ import { useCategoriasAdmin } from '../../hooks/useCategoriasAdmin';
 import IconPreview from '../../components/admin/categorias/IconPreview';
 import CategoriaFormModal from '../../components/admin/categorias/CategoriaFormModal';
 import CategoriaDeleteModal from '../../components/admin/categorias/CategoriaDeleteModal';
-import { TIPOS_ICONO } from '../../utils/iconUtils';
+import { TIPOS_ICONO } from '../../utils/iconUtils.jsx';
 
 /**
  * Página principal de administración de categorías

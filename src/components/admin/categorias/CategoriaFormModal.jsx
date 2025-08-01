@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import IconPreview from './IconPreview';
 import IconUploader from './IconUploader';
-import { TIPOS_ICONO, EMOJIS_CATEGORIAS, isValidEmoji, isValidSVG } from '../../../utils/iconUtils';
+import { TIPOS_ICONO, EMOJIS_CATEGORIAS, isValidEmoji, isValidSVG } from '../../../utils/iconUtils.jsx';
 
 /**
  * Modal para crear/editar categorías
