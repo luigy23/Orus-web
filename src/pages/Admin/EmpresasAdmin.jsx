@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminService from '../../services/admin.service';
+import { getMainImageUrl } from '../../utils/imageUtils';
 
 /**
  * Página de administración de empresas
@@ -286,10 +287,10 @@ const EmpresasAdmin = () => {
                           {/* Información de empresa */}
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              {empresa.Imagenes?.[0]?.Url ? (
+                              {empresa.Imagenes && empresa.Imagenes.length > 0 ? (
                                 <img
                                   className="h-10 w-10 rounded-lg object-cover"
-                                  src={empresa.Imagenes[0].Url}
+                                  src={getMainImageUrl(empresa.Imagenes)}
                                   alt={empresa.Nombre}
                                 />
                               ) : (

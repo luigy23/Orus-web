@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
+import ImageUploader from '../../components/admin/ImageUploader';
 import AdminService from '../../services/admin.service';
 
 /**
@@ -288,42 +289,20 @@ const EmpresaDetalleAdmin = () => {
               </div>
             </div>
 
-            {/* Imágenes */}
+            {/* Gestión de Imágenes */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">Imágenes ({empresa.Imagenes?.length || 0})</h3>
+                <h3 className="text-lg font-medium text-gray-900">Gestión de Imágenes</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Administra las imágenes de la empresa: sube nuevas, elimina, reordena y marca como principal.
+                </p>
               </div>
               <div className="px-6 py-4">
-                {empresa.Imagenes && empresa.Imagenes.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {empresa.Imagenes
-                      .sort((a, b) => a.Orden - b.Orden)
-                      .map((imagen, index) => (
-                      <div key={imagen.id} className="relative group">
-                        <img
-                          src={imagen.Url}
-                          alt={`${empresa.Nombre} - ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-lg border"
-                        />
-                        {imagen.EsPrincipal && (
-                          <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                            Principal
-                          </div>
-                        )}
-                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                          #{imagen.Orden}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p className="mt-2 text-sm text-gray-500">No hay imágenes cargadas</p>
-                  </div>
-                )}
+                <ImageUploader 
+                  empresaId={parseInt(id)}
+                  initialImages={empresa.Imagenes || []}
+                  maxImages={10}
+                />
               </div>
             </div>
           </div>

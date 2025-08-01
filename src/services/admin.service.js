@@ -145,6 +145,37 @@ const AdminService = {
     }
   },
 
+  /**
+   * Reordenar imágenes de una empresa
+   */
+  reordenarImagenes: async (empresaId, orden) => {
+    try {
+      const { data } = await axiosClient.put(
+        `/api/admin/empresas/${empresaId}/imagenes/reordenar`,
+        { orden }
+      );
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AdminService.reordenarImagenes:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Obtener todas las imágenes de una empresa
+   */
+  obtenerImagenesEmpresa: async (empresaId) => {
+    try {
+      const { data } = await axiosClient.get(
+        `/api/admin/empresas/${empresaId}/imagenes`
+      );
+      return data;
+    } catch (error) {
+      console.error("❌ Error en AdminService.obtenerImagenesEmpresa:", error);
+      throw error;
+    }
+  },
+
   // ===== CATEGORÍAS =====
 
   /**

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import slugify from '../../utils/slugify';
+import { getMainImageUrl } from '../../utils/imageUtils';
 import EtiquetaCategoria from '../home/categorias/EtiquetaCategoria';
 
 // "Categorias": [
@@ -13,12 +14,10 @@ import EtiquetaCategoria from '../home/categorias/EtiquetaCategoria';
 
 
 const EmpresaItem = ({ empresa }) => {
-  // Obtener la imagen principal (si existe)
-  const imagenUrl = empresa.Imagenes && empresa.Imagenes.length > 0
-    ? empresa.Imagenes[0].Url
-    : 'https://placehold.co/600x400/EEE/31343C';
+  // Obtener la imagen principal usando la utilidad
+  const imagenUrl = getMainImageUrl(empresa.Imagenes);
 
-    const PrimeraCategoria = empresa.Categorias[0]?.Categoria?.Nombre || 'Sin categoría';
+  const PrimeraCategoria = empresa.Categorias[0]?.Categoria?.Nombre || 'Sin categoría';
   // Obtener la(s) categoría(s) (puede requerir ajuste si tienes nombres de categorías por ahora ponemos la primera)
   // Aquí solo se muestra un ejemplo genérico
 

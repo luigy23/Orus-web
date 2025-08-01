@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { getImageUrl } from '../../utils/imageUtils';
 
 const EmpresaSlider = ({ imagenes = [], nombre = '', imgIndex, setImgIndex }) => {
   const [slideDirection, setSlideDirection] = useState(null); // 'left' o 'right'
@@ -50,7 +51,7 @@ const EmpresaSlider = ({ imagenes = [], nombre = '', imgIndex, setImgIndex }) =>
       onTouchEnd={handleTouchEnd}
     >
       <img
-        src={imagenes?.[imgIndex]?.Url || 'https://placehold.co/600x400/EEE/31343C'}
+        src={imagenes?.[imgIndex]?.Url ? getImageUrl(imagenes[imgIndex].Url) : 'https://placehold.co/600x400/EEE/31343C'}
         alt={nombre}
         className={`object-cover w-full h-full transition-all duration-300 ${getSlideClass()}`}
         draggable={false}
