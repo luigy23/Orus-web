@@ -356,7 +356,7 @@ const EmpresaForm = () => {
                     value={formData.Telefono}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orus-primary focus:border-orus-primary"
-                    placeholder="+57 300 123 4567"
+                    placeholder="3001234567"
                     required
                   />
                 </div>
