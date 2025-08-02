@@ -84,7 +84,12 @@ const EmpresaDetalle = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7-7.5 11-7.5 11s-7.5-4-7.5-11a7.5 7.5 0 1115 0z" />
             </svg>
-            <span>{empresa.Ciudad}</span>
+            <span>
+              {empresa.Ciudad?.Nombre 
+                ? `${empresa.Ciudad.Nombre}, ${empresa.Ciudad.Departamento?.Nombre}` 
+                : empresa.Ciudad || 'Ubicación no especificada'
+              }
+            </span>
           </div>
           {/* Descripción */}
           <div className="bg-white rounded-2xl p-5 mb-6 w-full text-center text-gray-700 text-lg shadow-sm">

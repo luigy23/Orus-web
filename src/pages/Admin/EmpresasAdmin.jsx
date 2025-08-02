@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminService from '../../services/admin.service';
 import { getMainImageUrl } from '../../utils/imageUtils';
+import { FiltrosGeograficos } from '../../components/ui/GeographicSelectors';
 
 /**
  * Página de administración de empresas
@@ -19,6 +20,8 @@ const EmpresasAdmin = () => {
   const [filtros, setFiltros] = useState({
     busqueda: '',
     estado: 'TODOS',
+    departamentoId: null,
+    ciudadId: null,
   });
   const [paginacion, setPaginacion] = useState({
     page: 1,
@@ -26,11 +29,6 @@ const EmpresasAdmin = () => {
     total: 0,
     pages: 0
   });
-
-  // Cargar empresas al montar el componente y cuando cambien los filtros
-  useEffect(() => {
-    cargarEmpresas();
-  }, [filtros, paginacion.page]);
 
   /**
    * Cargar lista de empresas desde la API
@@ -45,7 +43,9 @@ const EmpresasAdmin = () => {
         page: paginacion.page,
         limit: paginacion.limit,
         ...(filtros.estado !== 'TODOS' && { estado: filtros.estado }),
-        ...(filtros.busqueda && { busqueda: filtros.busqueda })
+        ...(filtros.busqueda && { busqueda: filtros.busqueda }),
+        ...(filtros.departamentoId && { departamentoId: filtros.departamentoId }),
+        ...(filtros.ciudadId && { ciudadId: filtros.ciudadId })
       };
 
       const response = await AdminService.getEmpresas(params);
@@ -65,11 +65,29 @@ const EmpresasAdmin = () => {
     }
   }, [filtros, paginacion.page, paginacion.limit]);
 
+  // Cargar empresas al montar el componente y cuando cambien los filtros
+  useEffect(() => {
+    cargarEmpresas();
+  }, [cargarEmpresas]);
+
   /**
    * Manejar cambios en los filtros
    */
   const handleFiltroChange = (key, value) => {
     setFiltros(prev => ({ ...prev, [key]: value }));
+    // Resetear a página 1 cuando se cambian filtros
+    setPaginacion(prev => ({ ...prev, page: 1 }));
+  };
+
+  /**
+   * Manejar cambios en filtros geográficos
+   */
+  const handleFiltrosGeograficos = (filtrosGeo) => {
+    setFiltros(prev => ({ 
+      ...prev, 
+      departamentoId: filtrosGeo.departamentoId,
+      ciudadId: filtrosGeo.ciudadId 
+    }));
     // Resetear a página 1 cuando se cambian filtros
     setPaginacion(prev => ({ ...prev, page: 1 }));
   };
@@ -150,53 +168,67 @@ const EmpresasAdmin = () => {
 
         {/* Filtros */}
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            {/* Búsqueda */}
+            {/* Filtros básicos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Búsqueda */}
+              <div>
+                <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
+                  Buscar
+                </label>
+                <input
+                  type="text"
+                  id="busqueda"
+                  placeholder="Nombre, email..."
+                  value={filtros.busqueda}
+                  onChange={(e) => handleFiltroChange('busqueda', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orus-primary focus:border-orus-primary text-sm"
+                />
+              </div>
+
+              {/* Estado */}
+              <div>
+                <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">
+                  Estado
+                </label>
+                <select
+                  id="estado"
+                  value={filtros.estado}
+                  onChange={(e) => handleFiltroChange('estado', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orus-primary focus:border-orus-primary text-sm"
+                >
+                  <option value="TODOS">Todos los estados</option>
+                  <option value="ACTIVO">Activo</option>
+                  <option value="INACTIVO">Inactivo</option>
+                  <option value="PENDIENTE">Pendiente</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Filtros geográficos */}
             <div>
-              <label htmlFor="busqueda" className="block text-sm font-medium text-gray-700 mb-1">
-                Buscar
-              </label>
-              <input
-                type="text"
-                id="busqueda"
-                placeholder="Nombre, ciudad, email..."
-                value={filtros.busqueda}
-                onChange={(e) => handleFiltroChange('busqueda', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orus-primary focus:border-orus-primary text-sm"
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Filtros por ubicación</h3>
+              <FiltrosGeograficos
+                departamentoId={filtros.departamentoId}
+                ciudadId={filtros.ciudadId}
+                onChange={handleFiltrosGeograficos}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
               />
             </div>
+          </div>
 
-            {/* Estado */}
-            <div>
-              <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">
-                Estado
-              </label>
-              <select
-                id="estado"
-                value={filtros.estado}
-                onChange={(e) => handleFiltroChange('estado', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orus-primary focus:border-orus-primary text-sm"
-              >
-                <option value="TODOS">Todos los estados</option>
-                <option value="ACTIVO">Activo</option>
-                <option value="INACTIVO">Inactivo</option>
-                <option value="PENDIENTE">Pendiente</option>
-              </select>
-            </div>
-
-            {/* Botón limpiar filtros */}
-            <div className="flex items-end">
-              <button
-                onClick={() => {
-                  setFiltros({ busqueda: '', estado: 'TODOS' });
-                  setPaginacion(prev => ({ ...prev, page: 1 }));
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orus-primary transition-colors"
-              >
-                Limpiar Filtros
-              </button>
-            </div>
+          {/* Botón limpiar filtros */}
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => {
+                setFiltros({ busqueda: '', estado: 'TODOS', departamentoId: null, ciudadId: null });
+                setPaginacion(prev => ({ ...prev, page: 1 }));
+              }}
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orus-primary transition-colors"
+            >
+              Limpiar Filtros
+            </button>
           </div>
         </div>
 
@@ -305,7 +337,10 @@ const EmpresasAdmin = () => {
                                   {empresa.Nombre}
                                 </div>
                                 <div className="text-sm text-gray-500">
-                                  {empresa.Ciudad || 'Sin ciudad'}
+                                  {empresa.Ciudad?.Nombre 
+                                    ? `${empresa.Ciudad.Nombre}, ${empresa.Ciudad.Departamento?.Nombre}` 
+                                    : empresa.Ciudad || 'Sin ciudad'
+                                  }
                                 </div>
                               </div>
                             </div>

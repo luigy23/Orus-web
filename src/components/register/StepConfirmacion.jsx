@@ -1,14 +1,5 @@
 // src/components/register/StepConfirmacion.jsx
-const ciudades = [
-  { id: 1, nombre: "Bogotá" },
-  { id: 2, nombre: "Medellín" },
-  { id: 3, nombre: "Cali" },
-  { id: 4, nombre: "Barranquilla" },
-  { id: 5, nombre: "Cartagena" },
-  { id: 6, nombre: "Bucaramanga" },
-  { id: 7, nombre: "Pereira" },
-  { id: 8, nombre: "Santa Marta" },
-];
+import { useCiudad } from "../../hooks/useUbicacion.js";
 
 export default function StepConfirmacion({
   formData,
@@ -16,8 +7,14 @@ export default function StepConfirmacion({
   successMessage,
   renderProgressDots,
 }) {
-  const ciudadSeleccionada =
-    ciudades.find((c) => c.id === formData.Ciudad)?.nombre || "";
+  const { ciudad, loading: loadingCiudad } = useCiudad(formData.ciudadId);
+
+  // Formatear la información de la ciudad
+  const ciudadTexto = loadingCiudad 
+    ? "Cargando..." 
+    : ciudad 
+      ? `${ciudad.Nombre}, ${ciudad.Departamento?.Nombre}`
+      : "No seleccionada";
 
   return (
     <div className="mt-16 sm:mt-20 space-y-6 sm:space-y-8">
@@ -33,7 +30,7 @@ export default function StepConfirmacion({
           { label: "Correo", value: formData.Correo },
           { label: "Teléfono", value: formData.Telefono },
           { label: "Fecha de nacimiento", value: formData.FechaNacimiento },
-          { label: "Ciudad", value: ciudadSeleccionada },
+          { label: "Ciudad", value: ciudadTexto },
         ].map(({ label, value }) => (
           <div
             key={label}

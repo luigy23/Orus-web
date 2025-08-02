@@ -9,15 +9,18 @@ import EtiquetaCategoria from '../components/home/categorias/EtiquetaCategoria'
 import { useNavigate } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { searchAtom } from '../atoms/searchAtom'
+import { ciudadBusquedaAtom } from '../atoms/ubicacionAtom'
 import Topbar from '../components/ui/navigation/Topbar'
 import BackButtom from '../components/ui/navigation/BackButtom'
 import BottomBar from '../components/ui/navigation/BottomBar'
+import CitySelector from '../components/ui/CitySelector'
 
 const Empresas = () => {
   const navigate = useNavigate()
   const { categoria } = useParams();
   const [empresas, setEmpresas] = useState([])
   const [value, setValue] = useAtom(searchAtom)
+  const [ciudadBusqueda] = useAtom(ciudadBusquedaAtom)
   const [empresasFiltradas, setEmpresasFiltradas] = useState([])
   const [categoriaActual, setCategoriaActual] = useState(null)
 
@@ -47,13 +50,22 @@ const Empresas = () => {
 
   const traeEmpresas = useCallback(async () => {
     try {
+      // Parámetros de búsqueda
+      const searchParams = {};
+      if (ciudadBusqueda) {
+        searchParams.ciudadId = ciudadBusqueda;
+      }
+      if (value) {
+        searchParams.busqueda = value;
+      }
+
       if (tipo === 'todas') {
-        const empresas = await getEmpresas()
+        const empresas = await getEmpresas(searchParams)
         console.log("todas las empresas", empresas)
         setEmpresas(empresas)
         setCategoriaActual(null)
       } else if (tipo === 'legacy' && id) {
-        const empresas = await getEmpresasByCategoria(id)
+        const empresas = await getEmpresasByCategoria(id, searchParams)
         console.log("empresas por ID legacy", empresas)
         setEmpresas(empresas)
         setCategoriaActual({ Nombre: nombre, id })
@@ -61,14 +73,14 @@ const Empresas = () => {
         // Intentar obtener la categoría por slug
         try {
           const categoriaData = await getCategoriaPorSlug(slug)
-          const empresas = await getEmpresasByCategoria(categoriaData.id)
+          const empresas = await getEmpresasByCategoria(categoriaData.id, searchParams)
           console.log("empresas por slug", empresas)
           setEmpresas(empresas)
           setCategoriaActual(categoriaData)
         } catch (error) {
           console.error('Error obteniendo categoría por slug:', error)
           // Fallback: mostrar todas las empresas
-          const empresas = await getEmpresas()
+          const empresas = await getEmpresas(searchParams)
           setEmpresas(empresas)
           setCategoriaActual(null)
         }
@@ -77,7 +89,7 @@ const Empresas = () => {
       console.error('Error cargando empresas:', error)
       setEmpresas([])
     }
-  }, [tipo, id, nombre, slug])
+  }, [tipo, id, nombre, slug, ciudadBusqueda, value])
 
   useEffect(() => {
     traeEmpresas()
@@ -119,20 +131,34 @@ const Empresas = () => {
       </Topbar>
       <div className='w-full flex-col items-center justify-center px-4 mt-4 '>
       <Buscador value={value} onChange={onChange} />
-      <div className='w-full flex items-center justify-start  gap-2 mt-3 mb-4'>
-        <button
-          onClick={() => navigate('/empresas')}
-
-          className={`px-3 py-1 rounded-full text-xs transition-colors ${
-            !categoria 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          }`}
-        >
-          Todas las categorías
-        </button>
-        <EtiquetaCategoria categoria={categoriaActual || nombre || 'Categoría'} />
+      
+      {/* Selector de ubicación */}
+      <div className='w-full flex items-center justify-between gap-3 mt-3 mb-4'>
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={() => navigate('/empresas')}
+            className={`px-3 py-1 rounded-full text-xs transition-colors ${
+              !categoria 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Todas las categorías
+          </button>
+          <EtiquetaCategoria categoria={categoriaActual || nombre || 'Categoría'} />
+        </div>
+        
+        {/* Selector de ciudad compacto */}
+        <div className='flex-shrink-0'>
+          <CitySelector 
+            variant="secondary" 
+            size="small"
+            showLabel={false}
+            className="min-w-fit"
+          />
+        </div>
       </div>
+      
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full'>
         {empresasFiltradas.map((empresa) => (
           <EmpresaItem key={empresa.id} empresa={empresa} />

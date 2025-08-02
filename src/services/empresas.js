@@ -1,9 +1,25 @@
 import axiosClient from "../lib/Axios";
 
 
-const getEmpresas = async () => {
+const getEmpresas = async (params = {}) => {
     try {
-        const response = await axiosClient.get('/api/empresas');
+        // Construir query string con los parámetros
+        const queryParams = new URLSearchParams();
+        
+        if (params.ciudadId) {
+            queryParams.append('ciudadId', params.ciudadId);
+        }
+        if (params.departamentoId) {
+            queryParams.append('departamentoId', params.departamentoId);
+        }
+        if (params.busqueda) {
+            queryParams.append('busqueda', params.busqueda);
+        }
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/api/empresas?${queryString}` : '/api/empresas';
+        
+        const response = await axiosClient.get(url);
         return response.data;
     } catch (error) {
         console.error('Error al obtener las empresas:', error);
@@ -22,10 +38,26 @@ const getEmpresaById = async (id) => {
     }
 }
 
-const getEmpresasByCategoria = async (categoria) => {
-    console.log("getEmpresasByCategoria", categoria)
+const getEmpresasByCategoria = async (categoria, params = {}) => {
+    console.log("getEmpresasByCategoria", categoria, params)
     try {
-        const response = await axiosClient.get(`/api/empresas/categoria/${categoria}`);
+        // Construir query string con los parámetros adicionales
+        const queryParams = new URLSearchParams();
+        
+        if (params.ciudadId) {
+            queryParams.append('ciudadId', params.ciudadId);
+        }
+        if (params.departamentoId) {
+            queryParams.append('departamentoId', params.departamentoId);
+        }
+        if (params.busqueda) {
+            queryParams.append('busqueda', params.busqueda);
+        }
+        
+        const queryString = queryParams.toString();
+        const url = queryString ? `/api/empresas/categoria/${categoria}?${queryString}` : `/api/empresas/categoria/${categoria}`;
+        
+        const response = await axiosClient.get(url);
         return response.data;
     } catch (error) {
         console.error('Error al obtener las empresas por categoría:', error);

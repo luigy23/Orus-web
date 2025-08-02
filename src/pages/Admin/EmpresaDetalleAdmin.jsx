@@ -215,7 +215,12 @@ const EmpresaDetalleAdmin = () => {
                   </div>
                   <div>
                     <dt className="text-sm font-medium text-gray-500">Ciudad</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{empresa.Ciudad || 'No especificada'}</dd>
+                    <dd className="mt-1 text-sm text-gray-900">
+                      {empresa.Ciudad?.Nombre 
+                        ? `${empresa.Ciudad.Nombre}, ${empresa.Ciudad.Departamento?.Nombre}` 
+                        : 'No especificada'
+                      }
+                    </dd>
                   </div>
                   <div className="sm:col-span-2">
                     <dt className="text-sm font-medium text-gray-500">Descripción</dt>

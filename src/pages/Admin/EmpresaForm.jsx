@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import ImageUploader from '../../components/admin/ImageUploader';
 import AdminService from '../../services/admin.service';
+import { SelectDepartamento, SelectCiudad } from '../../components/ui/GeographicSelectors';
 
 /**
  * Formulario para crear y editar empresas
@@ -24,7 +25,7 @@ const EmpresaForm = () => {
     Email: '',
     UsuarioCorreo: '',
     Telefono: '',
-    Ciudad: '',
+    ciudadId: null, // Cambiado de Ciudad a ciudadId
     HorarioLunes: '',
     HorarioMartes: '',
     HorarioMiercoles: '',
@@ -35,6 +36,9 @@ const EmpresaForm = () => {
     Estado: 'ACTIVO',
     categorias: []
   });
+
+  // Estado para manejar departamento seleccionado
+  const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState(null);
 
   // Estados auxiliares
   const [loading, setLoading] = useState(false);
@@ -58,7 +62,7 @@ const EmpresaForm = () => {
         Nombre: empresa.Nombre || '',
         Descripcion: empresa.Descripcion || '',
         Direccion: empresa.Direccion || '',
-        Ciudad: empresa.Ciudad || '',
+        ciudadId: empresa.ciudadId || null, // Usar ciudadId del backend
         Latitud: empresa.Latitud?.toString() || '',
         Longitud: empresa.Longitud?.toString() || '',
         SitioWeb: empresa.SitioWeb || '',
@@ -75,6 +79,11 @@ const EmpresaForm = () => {
         Estado: empresa.Estado || 'ACTIVO',
         categorias: empresa.Categorias?.map(cat => cat.Categoria.id) || []
       });
+
+      // Si hay ciudadId, obtener el departamento para los selectores
+      if (empresa.ciudadId && empresa.Ciudad) {
+        setDepartamentoSeleccionado(empresa.Ciudad.departamentoId);
+      }
       
     } catch (error) {
       console.error('❌ Error al cargar empresa:', error);
@@ -131,7 +140,7 @@ const EmpresaForm = () => {
   };
 
   /**
-   * Manejar cambios en horarios con selectores (versión mejorada)
+   * Manejar cambios en horarios con selectores (versión corregida)
    */
   const handleHorarioChange = (dia, tipo, valor) => {
     const horarioActual = formData[dia] || '';
@@ -149,10 +158,21 @@ const EmpresaForm = () => {
     let horaInicio = '';
     let horaFin = '';
     
-    if (horarioActual && horarioActual !== 'Cerrado' && horarioActual.includes('-')) {
-      const partes = horarioActual.split('-');
-      horaInicio = partes[0]?.trim() || '';
-      horaFin = partes[1]?.trim() || '';
+    if (horarioActual && horarioActual !== 'Cerrado') {
+      if (horarioActual.includes('-')) {
+        const partes = horarioActual.split('-');
+        horaInicio = partes[0]?.trim() || '';
+        horaFin = partes[1]?.trim() || '';
+      } else {
+        // Si no tiene guión, es solo la hora de inicio
+        horaInicio = horarioActual.trim();
+      }
+    }
+
+    // Debug específico para sábado y domingo
+    if (dia === 'HorarioSabado' || dia === 'HorarioDomingo') {
+      console.log(`🔍 ${dia} - ${tipo}:`, { valor, horarioActual: formData[dia] });
+      console.log(`🔍 ${dia} parsed:`, { horaInicio, horaFin });
     }
 
     // Actualizar la hora correspondiente
@@ -164,6 +184,7 @@ const EmpresaForm = () => {
       }
     } else if (tipo === 'fin') {
       horaFin = valor;
+      // No cambiar la hora de inicio, solo validar
     }
 
     // Formatear el horario final
@@ -172,7 +193,8 @@ const EmpresaForm = () => {
       if (validarHorario(horaInicio, horaFin)) {
         nuevoHorario = `${horaInicio}-${horaFin}`;
       } else {
-        nuevoHorario = horaInicio; // Solo mantener hora de inicio si hay conflicto
+        // Si hay conflicto de validación, mantener solo la parte que se está editando
+        nuevoHorario = tipo === 'inicio' ? horaInicio : `${horaInicio}-${horaFin}`;
       }
     } else if (horaInicio) {
       nuevoHorario = horaInicio;
@@ -184,6 +206,11 @@ const EmpresaForm = () => {
       ...prev,
       [dia]: nuevoHorario
     }));
+
+    // Debug final para sábado y domingo
+    if (dia === 'HorarioSabado' || dia === 'HorarioDomingo') {
+      console.log(`🔍 ${dia} resultado final:`, nuevoHorario);
+    }
   };
 
   /**
@@ -203,7 +230,7 @@ const EmpresaForm = () => {
   };
 
   /**
-   * Obtener hora de inicio y fin desde el horario formateado
+   * Obtener hora de inicio y fin desde el horario formateado (versión corregida)
    */
   const parseHorario = (horario) => {
     if (!horario || horario === 'Cerrado') {
@@ -219,7 +246,8 @@ const EmpresaForm = () => {
       };
     }
     
-    return { inicio: horario, fin: '', cerrado: false };
+    // Si solo hay una hora (sin guión), es la hora de inicio
+    return { inicio: horario.trim(), fin: '', cerrado: false };
   };
 
   /**
@@ -546,17 +574,30 @@ const EmpresaForm = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ciudad
+                    Departamento
                   </label>
-                  <input
-                    type="text"
-                    name="Ciudad"
-                    value={formData.Ciudad}
-                    onChange={handleInputChange}
+                  <SelectDepartamento
+                    value={departamentoSeleccionado}
+                    onChange={setDepartamentoSeleccionado}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orus-primary focus:border-orus-primary"
-                    placeholder="Bogotá"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ciudad
+                  </label>
+                  <SelectCiudad
+                    departamentoId={departamentoSeleccionado}
+                    value={formData.ciudadId}
+                    onChange={(ciudadId) => setFormData(prev => ({ ...prev, ciudadId }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orus-primary focus:border-orus-primary"
+                    disabled={!departamentoSeleccionado}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -661,13 +702,16 @@ const EmpresaForm = () => {
                             Hora de apertura
                           </label>
                           <select
+                            key={`${dia.name}-inicio`}
+                            id={`${dia.name}-inicio`}
+                            name={`${dia.name}-inicio`}
                             value={horarioInfo.inicio}
                             onChange={(e) => handleHorarioChange(dia.name, 'inicio', e.target.value)}
                             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-orus-primary focus:border-orus-primary"
                           >
                             <option value="">Seleccionar</option>
                             {opcionesHora.map(hora => (
-                              <option key={hora} value={hora}>{hora}</option>
+                              <option key={`${dia.name}-inicio-${hora}`} value={hora}>{hora}</option>
                             ))}
                           </select>
                         </div>
@@ -677,6 +721,9 @@ const EmpresaForm = () => {
                             Hora de cierre
                           </label>
                           <select
+                            key={`${dia.name}-fin`}
+                            id={`${dia.name}-fin`}
+                            name={`${dia.name}-fin`}
                             value={horarioInfo.fin}
                             onChange={(e) => handleHorarioChange(dia.name, 'fin', e.target.value)}
                             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-orus-primary focus:border-orus-primary"
@@ -686,7 +733,7 @@ const EmpresaForm = () => {
                             {opcionesHora
                               .filter(hora => !horarioInfo.inicio || hora > horarioInfo.inicio)
                               .map(hora => (
-                                <option key={hora} value={hora}>{hora}</option>
+                                <option key={`${dia.name}-fin-${hora}`} value={hora}>{hora}</option>
                               ))}
                           </select>
                         </div>

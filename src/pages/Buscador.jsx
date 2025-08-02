@@ -1,17 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import IconChispasOrus from '../assets/Icons/IconChispasOrus'
 import { Search } from 'lucide-react'
 import CategoriasLista from '../components/home/categorias/CategoriasLista'
 import { useAtom } from 'jotai'
 import { searchAtom } from '../atoms/searchAtom'
+import { userDataAtom } from '../atoms/userAtom'
+import { ciudadBusquedaAtom, ciudadBusquedaInfoAtom } from '../atoms/ubicacionAtom'
 import { useNavigate } from 'react-router-dom'
 import Topbar from '../components/ui/navigation/Topbar'
 import BackButtom from '../components/ui/navigation/BackButtom'
+import CitySelector from '../components/ui/CitySelector'
 
 const Buscador = () => {
   const [input, setInput] = useState("");
   const [, setSearch] = useAtom(searchAtom);
+  const [userData] = useAtom(userDataAtom);
+  const [ciudadBusqueda, setCiudadBusqueda] = useAtom(ciudadBusquedaAtom);
+  const [, setCiudadBusquedaInfo] = useAtom(ciudadBusquedaInfoAtom);
   const navigate = useNavigate();
+
+  // Inicializar ciudad de búsqueda con la del usuario si no hay una seleccionada
+  useEffect(() => {
+    if (!ciudadBusqueda && userData?.ciudad?.id) {
+      setCiudadBusqueda(userData.ciudad.id);
+      setCiudadBusquedaInfo({
+        id: userData.ciudad.id,
+        nombre: userData.ciudad.nombre,
+        departamento: userData.ciudad.departamento
+      });
+    }
+  }, [userData, ciudadBusqueda, setCiudadBusqueda, setCiudadBusquedaInfo]);
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -25,8 +43,7 @@ const Buscador = () => {
 
   return (
     <>
-
-      <main className='h-screen bg-orus-gradient flex flex-col items-center  pb-20 text-white'>
+      <main className='h-screen bg-orus-gradient flex flex-col items-center pb-20 text-white relative'>
         <Topbar>
           <BackButtom iconClassName='text-white' />
         </Topbar>
@@ -48,13 +65,20 @@ const Buscador = () => {
             <Search size={20} className="" color="#4B427B" />
           </button>
         </form>
-        <span
-          className='bg-orus-primary/50 px-4 py-2 rounded-full mt-4 mb-4'
-        >Medellín</span>
+        
+        {/* Selector de Ciudad usando el nuevo componente */}
+        <div className="mt-4 mb-4">
+          <CitySelector 
+            variant="primary" 
+            size="default"
+            showLabel={false}
+          />
+        </div>
+
         <CategoriasLista />
-        <div className=' absolute bottom-6  w-full flex flex-col items-center justify-center gap-4 p-4'>
+        <div className='absolute bottom-6 w-full flex flex-col items-center justify-center gap-4 p-4'>
           <button onClick={handleSubmit}
-            className='bg-orus-primary/50 px-4 py-2  rounded-full flex justify-between items-center w-3/4 hover:bg-orus-primary/70 transition-all duration-300'>
+            className='bg-orus-primary/50 px-4 py-2 rounded-full flex justify-between items-center w-3/4 hover:bg-orus-primary/70 transition-all duration-300'>
             <span>Buscar</span>
             <Search size={20} className="" color="white" />
           </button>

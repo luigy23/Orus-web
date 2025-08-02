@@ -22,8 +22,10 @@ const EmpresaItem = ({ empresa }) => {
   // Aquí solo se muestra un ejemplo genérico
 
 
-  // Ciudad
-  const ciudad = empresa.Ciudad || 'Sin ciudad';
+  // Ciudad - manejar nuevo formato normalizado
+  const ciudad = empresa.Ciudad?.Nombre 
+    ? `${empresa.Ciudad.Nombre}, ${empresa.Ciudad.Departamento?.Nombre || ''}`
+    : empresa.Ciudad || 'Sin ciudad';
 
   return (
     <Link to={`/empresas/${slugify(empresa.Nombre)}-${empresa.id}`} className="bg-white rounded-3xl shadow-md flex flex-col items-center w-full pb-4 transition-transform hover:scale-105 cursor-pointer text-inherit no-underline">

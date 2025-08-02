@@ -18,10 +18,10 @@ const handleRegistration = async (formData) => {
   // Transformar el payload antes de enviarlo
   const payload = {
     ...formData,
-    ciudadId: parseInt(formData.Ciudad),
+    ciudadId: parseInt(formData.ciudadId), // Ahora usa ciudadId directamente
     Genero: formData.Genero.toUpperCase().replace(/\s/g, "_"),
   };
-  delete payload.Ciudad;
+  // Ya no es necesario delete payload.Ciudad porque ya usamos ciudadId
 
 
 

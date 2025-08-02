@@ -9,7 +9,7 @@ export const registerFormAtom = atom({
   Telefono: "",
   FechaNacimiento: "",
   Genero: "",
-  Ciudad: "",
+  ciudadId: null, // Cambiado de Ciudad a ciudadId para usar FK
 });
 
 // Estado para controlar el paso actual del formulario
