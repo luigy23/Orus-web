@@ -22,6 +22,8 @@ import EmpresaDetalleAdmin from './pages/Admin/EmpresaDetalleAdmin';
 import CategoriasAdmin from './pages/Admin/CategoriasAdmin';
 import Usuarios from './pages/Admin/Usuarios';
 import UsuarioForm from './pages/Admin/UsuarioForm';
+import Banners from './pages/Admin/Banners';
+import BannerForm from './pages/Admin/BannerForm';
 import useAuthPersistence from './hooks/useAuthPersistence';
   
 export default function App() {
@@ -121,6 +123,21 @@ export default function App() {
         <Route path="/admin/usuarios/:correo/editar" element={
           <AdminRoute>
             <UsuarioForm />
+          </AdminRoute>
+        } />
+        <Route path="/admin/banners" element={
+          <AdminRoute>
+            <Banners />
+          </AdminRoute>
+        } />
+        <Route path="/admin/banners/nuevo" element={
+          <AdminRoute>
+            <BannerForm />
+          </AdminRoute>
+        } />
+        <Route path="/admin/banners/:id/editar" element={
+          <AdminRoute>
+            <BannerForm />
           </AdminRoute>
         } />
       </Routes>
