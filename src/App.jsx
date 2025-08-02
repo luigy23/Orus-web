@@ -20,6 +20,8 @@ import EmpresasAdmin from './pages/Admin/EmpresasAdmin';
 import EmpresaForm from './pages/Admin/EmpresaForm';
 import EmpresaDetalleAdmin from './pages/Admin/EmpresaDetalleAdmin';
 import CategoriasAdmin from './pages/Admin/CategoriasAdmin';
+import Usuarios from './pages/Admin/Usuarios';
+import UsuarioForm from './pages/Admin/UsuarioForm';
 import useAuthPersistence from './hooks/useAuthPersistence';
   
 export default function App() {
@@ -104,6 +106,21 @@ export default function App() {
         <Route path="/admin/categorias" element={
           <AdminRoute>
             <CategoriasAdmin />
+          </AdminRoute>
+        } />
+        <Route path="/admin/usuarios" element={
+          <AdminRoute>
+            <Usuarios />
+          </AdminRoute>
+        } />
+        <Route path="/admin/usuarios/nuevo" element={
+          <AdminRoute>
+            <UsuarioForm />
+          </AdminRoute>
+        } />
+        <Route path="/admin/usuarios/:correo/editar" element={
+          <AdminRoute>
+            <UsuarioForm />
           </AdminRoute>
         } />
       </Routes>
