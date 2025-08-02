@@ -66,12 +66,13 @@ const Buscador = () => {
           </button>
         </form>
         
-        {/* Selector de Ciudad usando el nuevo componente */}
-        <div className="mt-4 mb-4">
+        {/* Selector de Ciudad con mejor diseño */}
+        <div className="mt-6 mb-6 w-full max-w-sm">
           <CitySelector 
             variant="primary" 
             size="default"
             showLabel={false}
+            className="w-full justify-center"
           />
         </div>
 

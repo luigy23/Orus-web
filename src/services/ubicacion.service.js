@@ -13,7 +13,7 @@ class UbicacionService {
    */
   async getDepartamentos(incluirCiudades = true) {
     try {
-      const response = await axiosClient.get('/api/departamentos', {
+      const response = await axiosClient.get('/api/ubicacion/departamentos', {
         params: { incluirCiudades: incluirCiudades.toString() }
       });
       return response.data;
@@ -47,18 +47,34 @@ class UbicacionService {
    */
   async getCiudades(filtros = {}) {
     try {
-      const params = {};
-      
+      // Si hay filtro por departamento, usar la ruta específica
       if (filtros.departamentoId) {
-        params.departamentoId = filtros.departamentoId;
+        return await this.getCiudadesPorDepartamento(filtros.departamentoId, filtros.busqueda);
       }
       
+      // Si no, obtener todos los departamentos y sus ciudades
+      const departamentos = await this.getDepartamentos(true);
+      let todasLasCiudades = [];
+      
+      departamentos.forEach(depto => {
+        if (depto.Ciudades) {
+          const ciudadesConDepartamento = depto.Ciudades.map(ciudad => ({
+            ...ciudad,
+            Departamento: { Nombre: depto.Nombre, id: depto.id }
+          }));
+          todasLasCiudades = [...todasLasCiudades, ...ciudadesConDepartamento];
+        }
+      });
+      
+      // Aplicar filtro de búsqueda si existe
       if (filtros.busqueda) {
-        params.busqueda = filtros.busqueda;
+        const termino = filtros.busqueda.toLowerCase();
+        todasLasCiudades = todasLasCiudades.filter(ciudad => 
+          ciudad.Nombre.toLowerCase().includes(termino)
+        );
       }
       
-      const response = await axiosClient.get('/api/ciudades', { params });
-      return response.data;
+      return todasLasCiudades;
     } catch (error) {
       console.error('❌ Error al obtener ciudades:', error);
       throw new Error(error.response?.data?.error || 'Error al cargar ciudades');
@@ -79,7 +95,7 @@ class UbicacionService {
         params.busqueda = busqueda;
       }
       
-      const response = await axiosClient.get(`/api/departamentos/${departamentoId}/ciudades`, { params });
+      const response = await axiosClient.get(`/api/ubicacion/departamento/${departamentoId}/ciudades`, { params });
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ciudades del departamento:', error);
@@ -94,7 +110,7 @@ class UbicacionService {
    */
   async getCiudadPorId(ciudadId) {
     try {
-      const response = await axiosClient.get(`/api/ciudades/${ciudadId}`);
+      const response = await axiosClient.get(`/api/ubicacion/ciudad/${ciudadId}`);
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener ciudad:', error);

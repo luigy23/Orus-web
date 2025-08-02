@@ -132,29 +132,31 @@ const Empresas = () => {
       <div className='w-full flex-col items-center justify-center px-4 mt-4 '>
       <Buscador value={value} onChange={onChange} />
       
-      {/* Selector de ubicación */}
+      {/* Filtros y ubicación */}
       <div className='w-full flex items-center justify-between gap-3 mt-3 mb-4'>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-2 flex-1 min-w-0'>
           <button
             onClick={() => navigate('/empresas')}
-            className={`px-3 py-1 rounded-full text-xs transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors whitespace-nowrap ${
               !categoria 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-blue-500 text-white shadow-sm' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
             Todas las categorías
           </button>
-          <EtiquetaCategoria categoria={categoriaActual || nombre || 'Categoría'} />
+          {categoriaActual && (
+            <EtiquetaCategoria categoria={categoriaActual.Nombre || nombre || 'Categoría'} />
+          )}
         </div>
         
-        {/* Selector de ciudad compacto */}
+        {/* Selector de ciudad más compacto */}
         <div className='flex-shrink-0'>
           <CitySelector 
             variant="secondary" 
             size="small"
             showLabel={false}
-            className="min-w-fit"
+            className="min-w-fit shadow-sm"
           />
         </div>
       </div>
